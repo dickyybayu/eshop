@@ -4,7 +4,9 @@ import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -20,7 +22,11 @@ public class ProductController {
         return "createProduct";
     }
     @PostMapping("/create")
-    public String createProductPost(@ModelAttribute Product product, Model model) {
+    public String createProductPost(@Valid @ModelAttribute Product product, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "createProduct";
+        }
+
         service.create(product);
         return "redirect:list";
     }
