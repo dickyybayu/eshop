@@ -37,7 +37,7 @@ class CreateProductFunctionalTest {
     }
 
     @Test
-    void userCanCreateProduct(ChromeDriver driver) throws Exception {
+    void userCanCreateProduct(ChromeDriver driver) {
         driver.get(baseUrl + "/product/create");
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
