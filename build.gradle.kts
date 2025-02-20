@@ -38,13 +38,22 @@ val webdrivermanagerVersion = "5.6.3"
 val junitJupiterVersion = "5.9.1"
 
 dependencies {
+    // Implementation dependencies
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // Compile only dependencies
     compileOnly("org.projectlombok:lombok")
+
+    // Development only dependencies
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // Annotation processors
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
+
+    // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
@@ -52,6 +61,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
 }
+
 
 tasks.register<Test>("unitTest") {
     description = "Runs unit tests."
