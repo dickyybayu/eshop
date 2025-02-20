@@ -18,6 +18,7 @@ public class ProductRepositoryTest {
     ProductRepository productRepository;
     @BeforeEach
     void setUp() {
+        // This setup method is intentionally left empty as no initialization is required currently.
     }
     @Test
     void testCreateAndFind() {
