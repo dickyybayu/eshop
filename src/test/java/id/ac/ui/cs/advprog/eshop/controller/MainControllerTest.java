@@ -22,7 +22,7 @@ public class MainControllerTest {
     void testMainPage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("homePage"));
+                .andExpect(view().name("HomePage"));
     }
 
 }
