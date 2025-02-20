@@ -108,7 +108,8 @@ class ProductControllerTest {
         productController.editProductPost(product, model);
 
         verify(productService).update(product);
-        assertEquals("redirect:/product/list", "redirect:/product/list");
+        String viewName = productController.editProductPost(product, model);
+        assertEquals("redirect:/product/list", viewName);
     }
 
     // Test for deleteProduct()
