@@ -12,12 +12,13 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductRepositoryTest {
+class ProductRepositoryTest {
 
     @InjectMocks
     ProductRepository productRepository;
     @BeforeEach
     void setUp() {
+        // This setup method is intentionally left empty as no initialization is required currently.
     }
     @Test
     void testCreateAndFind() {
@@ -64,6 +65,46 @@ public class ProductRepositoryTest {
         assertFalse(productIterator.hasNext());
     }
 
+    // Test for findById()
+    @Test
+    void testFindById() {
+        Product product = new Product();
+        product.setProductId("1");
+        product.setProductName("Product A");
+        product.setProductQuantity(100);
+
+        productRepository.create(product);
+
+        Product foundProduct = productRepository.findById("1");
+
+        assertNotNull(foundProduct);
+        assertEquals("Product A", foundProduct.getProductName());
+        assertEquals(100, foundProduct.getProductQuantity());
+    }
+
+    @Test
+    void testFindByIdNotEquals() {
+        Product product = new Product();
+        product.setProductId("5");
+        product.setProductName("Product A");
+        product.setProductQuantity(100);
+
+        productRepository.create(product);
+
+        Product foundProduct = productRepository.findById("2");
+
+        assertNull(foundProduct);
+    }
+
+    @Test
+    void testFindByIdNotFound() {
+        String nonExistentProductId = "non-existent-id";
+
+        Product foundProduct = productRepository.findById(nonExistentProductId);
+
+        assertNull(foundProduct);
+    }
+
     @Test
     void testEditProduct() {
         Product product = new Product();
@@ -89,6 +130,31 @@ public class ProductRepositoryTest {
         assertEquals(updatedProduct.getProductName(), savedProduct.getProductName());
         assertEquals(updatedProduct.getProductQuantity(), savedProduct.getProductQuantity());
     }
+
+    @Test
+    void testEditProductIdNotEquals() {
+        Product product = new Product();
+        product.setProductId("1");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("2");
+        updatedProduct.setProductName("Sampo Cap Fam");
+        updatedProduct.setProductQuantity(200);
+
+        Product result = productRepository.update(updatedProduct);
+
+        assertNull(result);
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+        Product savedProduct = productIterator.next();
+        assertEquals("Sampo Cap Bambang", savedProduct.getProductName());
+        assertEquals(100, savedProduct.getProductQuantity());
+    }
+
 
     @Test
     void testEmptyProduct() {
