@@ -26,19 +26,26 @@ Overall, I have gained valuable insights into writing clean and secure code. Mov
 ## Reflection
 1. **Code Quality Issues and Fixing Strategy**
    1. Unnecessary `public` Modifiers in Test Classes:
+   
       Removed unnecessary `public` modifiers in test classes to align with Java best practices, improving code cleanliness and maintainability.
    2. Unnecessary `throws Exception` Declarations:
+   
       Cleaned up redundant `throws Exception` declarations in test methods, which helps reduce verbosity and avoid misleading exceptions.
    3. Unused Imports:
+   
       Removed unused imports to eliminate warnings and streamline the codebase, contributing to better performance and maintainability.
    4. Inconsistent Method Parameter Naming:
+   
       Renamed method parameters to improve code readability and avoid confusion.
    5. Handling Empty Methods:
+   
       Addressed the empty `setup()` method with comment to avoid confusion and improve test preparation.
    6. Correcting Assertions:
+   
       Updated assertions to avoid comparing literals directly, ensuring accurate validation of method outputs.
    
 2. **Evaluation of CI/CD Implementation**
+
    I believe my current project meets the definition of Continuous Integration (CI) and Continuous Deployment (CD). By utilizing GitHub Actions to run workflows defined in the `.github/workflows` directory, I've implemented CI since the workflows automatically trigger whenever there's a push or pull request to a branch. This ensures that all code changes are consistently tested and validated through automated testing and code quality checks.
 
    For Continuous Deployment (CD), I have integrated Koyeb as the deployment platform. The setup enables automatic deployment of the project every time new changes are pushed or merged into the branch. This not only reduces manual deployment effort but also keeps the production environment consistently updated with the latest code changes.
