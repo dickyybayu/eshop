@@ -21,12 +21,12 @@ public class ProductController {
     public String createProductPage(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
-        return "createProduct";
+        return "CreateProduct";
     }
     @PostMapping("/create")
     public String createProductPost(@Valid @ModelAttribute Product product, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "createProduct";
+            return "CreateProduct";
         }
 
         service.create(product);
@@ -37,14 +37,14 @@ public class ProductController {
     public String productListPage(Model model) {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
-        return "productlist";
+        return "Productlist";
     }
 
     @GetMapping("/edit/{id}")
     public String editProductPage(@PathVariable("id") String productId, Model model ) {
         Product editProduct = service.findById(productId);
         model.addAttribute("product", editProduct );
-        return "editProduct";
+        return "EditProduct";
     }
 
     @PostMapping("/edit")
