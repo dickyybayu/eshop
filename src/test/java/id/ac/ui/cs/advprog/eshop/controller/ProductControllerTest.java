@@ -78,7 +78,7 @@ class ProductControllerTest {
         when(productService.findAll()).thenReturn(List.of(product1, product2));
 
         String result = productController.productListPage(model);
-        assertEquals("productlist", result);
+        assertEquals("productList", result);
         verify(productService).findAll();
     }
 
