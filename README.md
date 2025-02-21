@@ -20,3 +20,30 @@ Overall, I have gained valuable insights into writing clean and secure code. Mov
 2. Creating a new functional test suite with the same setup procedures and instance variables as CreateProductFunctionalTest.java can lead to code duplication and reduced maintainability. Repeating setup logic across multiple test classes makes the code harder to manage and increases the risk of inconsistencies when updates are needed. Copying the same setup and test logic in multiple classes results in redundancy, making future modifications more difficult and time-consuming. Additionally, duplicating initialization logic reduces reusability, which can make the test suite harder to maintain as it expands. This also violates the "Don't Repeat Yourself" (DRY) principle, which aims to minimize code repetition and improve efficiency.
 
    To address these issues, we can extract shared setup logic into a base test class, allowing all functional test suites to inherit from it. This reduces duplication and ensures consistency across tests. Another improvement is using helper methods for common actions, such as creating a product or verifying the item count, to prevent rewriting the same UI interaction logic in multiple test cases. Additionally, using parameterized tests helps reduce redundancy by allowing different input scenarios to be tested in a single test method. These improvements enhance the overall cleanliness of the test suite, making it more maintainable and scalable without unnecessary duplication.
+
+
+# Module 2: CI/CD & DevOps
+## Reflection
+1. **Code Quality Issues and Fixing Strategy**
+   1. Unnecessary `public` Modifiers in Test Classes:
+      Removed unnecessary `public` modifiers in test classes to align with Java best practices, improving code cleanliness and maintainability.
+   2. Unnecessary `throws Exception` Declarations:
+      Cleaned up redundant `throws Exception` declarations in test methods, which helps reduce verbosity and avoid misleading exceptions.
+   3. Unused Imports:
+      Removed unused imports to eliminate warnings and streamline the codebase, contributing to better performance and maintainability.
+   4. Inconsistent Method Parameter Naming:
+      Renamed method parameters to improve code readability and avoid confusion.
+   5. Handling Empty Methods:
+      Addressed the empty `setup()` method with comment to avoid confusion and improve test preparation.
+   6. Correcting Assertions:
+      Updated assertions to avoid comparing literals directly, ensuring accurate validation of method outputs.
+   
+2. **Evaluation of CI/CD Implementation**
+   I believe my current project meets the definition of Continuous Integration (CI) and Continuous Deployment (CD). By utilizing GitHub Actions to run workflows defined in the `.github/workflows` directory, I've implemented CI since the workflows automatically trigger whenever there's a push or pull request to a branch. This ensures that all code changes are consistently tested and validated through automated testing and code quality checks.
+
+   For Continuous Deployment (CD), I have integrated Koyeb as the deployment platform. The setup enables automatic deployment of the project every time new changes are pushed or merged into the branch. This not only reduces manual deployment effort but also keeps the production environment consistently updated with the latest code changes.
+
+
+## Code Coverage
+![Code Coverage JaCoCo](https://github.com/user-attachments/assets/e3186e9c-06ea-470b-b7e7-6d4c5f028f94)
+![SonarQube Analysis](https://github.com/user-attachments/assets/9d61d392-2ec3-47a2-aa95-c416905d6cfa)
