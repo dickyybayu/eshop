@@ -1,12 +1,12 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.service.ProductService;
+import id.ac.ui.cs.advprog.eshop.service.ProductServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -15,20 +15,24 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 class ProductControllerTest {
 
     @InjectMocks
     private ProductController productController;
 
     @Mock
-    private ProductService productService;
+    private ProductServiceImpl productService;
 
     @Mock
     private Model model;
 
     @Mock
     private BindingResult bindingResult;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     // Test for createProductPage()
     @Test
@@ -40,7 +44,6 @@ class ProductControllerTest {
         assertEquals("createProduct", viewName);
     }
 
-
     // Test for createProductPost() when product is valid
     @Test
     void testCreateProductPostValid() {
@@ -50,7 +53,9 @@ class ProductControllerTest {
         product.setProductQuantity(100);
 
         when(bindingResult.hasErrors()).thenReturn(false);
-        String result = productController.createProductPost(product, bindingResult, model);
+        when(productService.create(product)).thenReturn(product);
+
+        String result = productController.createProductPost(product, bindingResult);
         assertEquals("redirect:list", result);
         verify(productService).create(product);
     }
@@ -59,8 +64,11 @@ class ProductControllerTest {
     @Test
     void testCreateProductPostInvalid() {
         Product product = new Product();
+
+        // Simulate validation error
         when(bindingResult.hasErrors()).thenReturn(true);
-        String result = productController.createProductPost(product, bindingResult, model);
+
+        String result = productController.createProductPost(product, bindingResult);
         assertEquals("createProduct", result);
     }
 
@@ -80,6 +88,7 @@ class ProductControllerTest {
         String result = productController.productListPage(model);
         assertEquals("productList", result);
         verify(productService).findAll();
+        verify(model).addAttribute(eq("products"), anyList());
     }
 
     // Test for editProductPage()
@@ -95,21 +104,36 @@ class ProductControllerTest {
         String result = productController.editProductPage(productId, model);
         assertEquals("editProduct", result);
         verify(productService).findById(productId);
+        verify(model).addAttribute("product", product);
     }
 
-    // Test for editProductPost() (editing product after form submission)
+    // Test for editProductPost() when the product is valid
     @Test
-    void testEditProductPost() {
-        Product product = new Product();
-        product.setProductId("1");
-        product.setProductName("Product A");
-        product.setProductQuantity(100);
+    void testEditProductPostValid() {
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("1");
+        updatedProduct.setProductName("Product A");
+        updatedProduct.setProductQuantity(100);
 
-        productController.editProductPost(product, model);
+        when(bindingResult.hasErrors()).thenReturn(false);
+        String result = productController.editProductPost(updatedProduct, bindingResult);
+        assertEquals("redirect:/product/list", result);
+        verify(productService).update(updatedProduct);
+    }
 
-        verify(productService).update(product);
-        String viewName = productController.editProductPost(product, model);
-        assertEquals("redirect:/product/list", viewName);
+    // Test for editProductPost() when product has validation errors
+    @Test
+    void testEditProductPostInvalid() {
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("1");
+        updatedProduct.setProductName("Product A");
+        updatedProduct.setProductQuantity(100);
+
+        // Simulate validation errors
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        String result = productController.editProductPost(updatedProduct, bindingResult);
+        assertEquals("editProduct", result);
     }
 
     // Test for deleteProduct()

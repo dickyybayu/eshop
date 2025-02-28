@@ -1,7 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
+import id.ac.ui.cs.advprog.eshop.repository.ProductRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -21,14 +20,13 @@ class ProductServiceImplTest {
     private ProductServiceImpl productService;
 
     @Mock
-    private ProductRepository productRepository;
+    private ProductRepositoryImpl productRepository;
 
     private Product product;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
         product = new Product();
         product.setProductId("1");
         product.setProductName("Product A");
@@ -54,8 +52,7 @@ class ProductServiceImplTest {
         List<Product> products = new ArrayList<>();
         products.add(product);
 
-        Iterator<Product> productIterator = products.iterator();
-        when(productRepository.findAll()).thenReturn(productIterator);
+        when(productRepository.findAll()).thenReturn(products);
 
         List<Product> allProducts = productService.findAll();
 
@@ -64,7 +61,7 @@ class ProductServiceImplTest {
         verify(productRepository).findAll();
     }
 
-    // Test for findById(String productId)
+    // Test for findById()
     @Test
     void testFindById() {
         when(productRepository.findById("1")).thenReturn(product);
@@ -82,7 +79,7 @@ class ProductServiceImplTest {
         Product updatedProduct = new Product();
         updatedProduct.setProductId("1");
         updatedProduct.setProductName("Updated Product");
-        updatedProduct.setProductQuantity(150);
+        updatedProduct.setProductQuantity(200);
 
         when(productRepository.update(updatedProduct)).thenReturn(updatedProduct);
 
@@ -90,7 +87,7 @@ class ProductServiceImplTest {
 
         assertNotNull(result);
         assertEquals("Updated Product", result.getProductName());
-        assertEquals(150, result.getProductQuantity());
+        assertEquals(200, result.getProductQuantity());
         verify(productRepository).update(updatedProduct);
     }
 
