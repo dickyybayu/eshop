@@ -50,7 +50,64 @@ Overall, I have gained valuable insights into writing clean and secure code. Mov
 
    For Continuous Deployment (CD), I have integrated Koyeb as the deployment platform. The setup enables automatic deployment of the project every time new changes are pushed or merged into the branch. This not only reduces manual deployment effort but also keeps the production environment consistently updated with the latest code changes.
 
-
 ## Code Coverage
 ![Code Coverage JaCoCo](https://github.com/user-attachments/assets/e3186e9c-06ea-470b-b7e7-6d4c5f028f94)
 ![SonarQube Analysis](https://github.com/user-attachments/assets/9d61d392-2ec3-47a2-aa95-c416905d6cfa)
+
+
+# Module 03: OO Principles & Software Maintainability
+## Reflection
+
+### 1) **Principles Applied to the Project**
+
+In this project, I have applied the following SOLID principles to improve the maintainability, scalability, and flexibility of the application:
+
+- **Single Responsibility Principle (SRP)**:
+   - Each class is responsible for a specific functionality. For instance, controllers like `CarController` and `ProductController` handle only the routing and request handling for their respective entities, while business logic resides in service classes (`CarServiceImpl`, `ProductServiceImpl`). Repositories (`CarRepository`, `ProductRepository`) handle data persistence. This separation ensures that each class has only one reason to change.
+
+- **Open/Closed Principle (OCP)**:
+   - The system is designed to be open for extension but closed for modification. For example, by using abstract classes and interfaces, controllers and services can be extended without modifying the existing code. The introduction of new features (e.g., a new controller or repository) can be done by adding new classes rather than altering the existing ones.
+
+- **Liskov Substitution Principle (LSP)**:
+   - Subtypes should be substitutable for their base types without altering the correctness of the program. In the earlier design, `CarController` was a subclass of `ProductController`, which led to incorrect inheritance. This was resolved by separating the controllers, ensuring that objects of a superclass can be replaced with objects of a subclass without introducing errors.
+
+- **Interface Segregation Principle (ISP)**:
+   - Interfaces are designed to be specific to the services they provide. For example, the `CarService` and `ProductService` interfaces contain only the necessary methods for their respective operations (CRUD for cars and products), preventing clients from depending on methods they don’t need.
+
+- **Dependency Inversion Principle (DIP)**:
+   - High-level modules (like service classes) should not depend on low-level modules (like concrete repository classes). Instead, both should depend on abstractions. In this project, services now depend on repository interfaces rather than concrete repository implementations, making the system more flexible and easier to test.
+
+---
+
+### 2) **Advantages of Applying SOLID Principles**
+
+- **Maintainability**:
+   - By following the SRP, each class has a clear responsibility, making it easier to maintain and extend. For example, `CarController` handles only car-related routes and logic, and `ProductController` handles product-related logic. Changes to one do not affect the other.
+   - **Example**: If a new feature is needed for cars, `CarController` and `CarServiceImpl` can be modified independently of `ProductController` or `ProductServiceImpl`.
+
+- **Testability**:
+   - The Dependency Inversion Principle allows services to depend on abstractions (interfaces) rather than concrete implementations. This decoupling makes it easier to mock dependencies in unit tests.
+   - **Example**: In tests, `CarServiceImpl` can be tested independently by mocking the `CarRepository` interface, without the need for database access.
+
+- **Scalability**:
+   - The system is designed to scale efficiently. As the project grows, new services, controllers, and repositories can be added without requiring changes to the existing structure.
+   - **Example**: Adding additional validation or new features to the `CarServiceImpl` or `ProductServiceImpl` can be done without modifying existing controller or service files.
+
+---
+
+### 3) **Disadvantages of Not Applying SOLID Principles**
+
+- **Tight Coupling**:
+   - Without SOLID principles, components become tightly coupled. Changes to one part of the system may require modifying multiple other parts, leading to increased risk of bugs and making the system harder to maintain.
+   - **Example**: If `CarController` directly depended on `CarServiceImpl`, any changes to `CarServiceImpl` would force changes to `CarController`, creating tight dependencies.
+
+- **Difficulty in Extending**:
+   - Without abstractions, adding new features or repositories requires modifying existing code, which increases the risk of breaking existing functionality. This also makes the codebase harder to scale.
+   - **Example**: If the database was switched from an in-memory list to an actual database, the `CarServiceImpl` and `ProductServiceImpl` classes would both need to be modified, instead of just creating new repository implementations.
+
+- **Harder to Maintain and Test**:
+   - Large, monolithic classes with multiple responsibilities make the system difficult to maintain and test. Refactoring would become more complex, and unit tests would be harder to write and maintain.
+   - **Example**: If both `CarController` and `ProductController` were in the same class, testing car-related functionality would become more complicated because product-related logic would also be included.
+
+---
+
