@@ -2,17 +2,23 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Car;
 import id.ac.ui.cs.advprog.eshop.service.CarServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
 @RequestMapping("/car")
-class CarController extends ProductController {
+public class CarController {
+    private final CarServiceImpl carService;
+
     @Autowired
-    private CarServiceImpl carService;
+    public CarController(CarServiceImpl carService) {
+        this.carService = carService;
+    }
 
     @GetMapping("/createCar")
     public String createCarPage(Model model) {
@@ -22,7 +28,10 @@ class CarController extends ProductController {
     }
 
     @PostMapping("/createCar")
-    public String createCarPost(@ModelAttribute Car car, Model model) {
+    public String createCarPost(@Valid @ModelAttribute Car car, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "createCar";
+        }
         carService.create(car);
         return "redirect:listCar";
     }
@@ -42,10 +51,14 @@ class CarController extends ProductController {
     }
 
     @PostMapping("/editCar")
-    public String editCarPost(@ModelAttribute Car car, Model model) {
+    public String editCarPost(@Valid @ModelAttribute Car car, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "editCar";
+        }
         carService.update(car.getCarId(), car);
         return "redirect:listCar";
     }
+
 
     @PostMapping("/deleteCar")
     public String deleteCar(@RequestParam("carId") String carId) {
