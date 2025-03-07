@@ -111,3 +111,24 @@ In this project, I have applied the following SOLID principles to improve the ma
 
 ---
 
+# Module 04: Test-Driven Development & Refactoring
+## Reflection
+
+1. Overall, TDD has been useful, ensuring basic functionality and catching bugs early. However, I sometimes miss edge cases since tests are written before fully understanding the problem. My focus on unit tests also means integration issues can slip through.  
+   
+   While TDD helps keep my code modular and safe to refactor, some tests are too rigid, breaking with small changes. Over-testing implementation details instead of behavior makes maintenance harder. I also find TDD slows development at times, especially when tests need rewriting. 
+
+   To improve, I need to balance TDD with exploratory coding, write more integration tests, and optimize slow test execution. With better test design and flexibility, TDD can be even more effective.
+
+
+2. **Reflection on F.I.R.S.T. principle**
+
+    - **Fast**: The use of Mockito ensured tests ran quickly. However, database-related tests slowed execution. Optimizing test setup or using in-memory databases can improve speed.
+    
+    - **Isolated**: Some tests depended on previous tests' results, which is not ideal. Ensuring full independence by properly isolating test cases is necessary.
+    
+    - **Repeatable**: Since Mockito was used, test results were consistent. However, database interactions should be further isolated to avoid unexpected failures.
+    
+    - **Self-Validating**: The tests followed this principle, but failure messages could be clearer.
+    
+    - **Timely**: The TDD cycle was followed (RED-GREEN-REFACTOR), ensuring timely test creation.
