@@ -80,22 +80,31 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    void testSetStatusSuccessAndRejected() {
+    void testSetStatusSuccess() {
         Payment payment = testPayments.get(0);
 
         when(mockPaymentRepository.getOrder(payment.getId())).thenReturn(sampleOrder);
+        when(mockPaymentRepository.save(any(Order.class), any(Payment.class))).thenReturn(payment);
+        when(mockOrderService.updateStatus(anyString(), anyString())).thenReturn(sampleOrder);
 
-        paymentServiceTest.setStatus(payment, PaymentStatus.SUCCESS.getValue());
+        Payment updatedPayment = paymentServiceTest.setStatus(payment, PaymentStatus.SUCCESS.getValue());
 
         assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
-        assertEquals(OrderStatus.SUCCESS.getValue(), sampleOrder.getStatus());
+        verify(mockOrderService, times(1)).updateStatus(sampleOrder.getId(), OrderStatus.SUCCESS.getValue());
+    }
 
-        paymentServiceTest.setStatus(payment, PaymentStatus.REJECTED.getValue());
+    @Test
+    void testSetStatusToRejected(){
+        Payment payment = testPayments.get(0);
 
-        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
-        assertEquals(OrderStatus.FAILED.getValue(), sampleOrder.getStatus());
+        when(mockPaymentRepository.getOrder(payment.getId())).thenReturn(sampleOrder);
+        when(mockPaymentRepository.save(any(Order.class), any(Payment.class))).thenReturn(payment);
+        when(mockOrderService.updateStatus(anyString(), anyString())).thenReturn(sampleOrder);
 
-        verify(mockPaymentRepository, times(2)).getOrder(payment.getId());
+        Payment updatedPayment = paymentServiceTest.setStatus(payment, PaymentStatus.REJECTED.getValue());
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), updatedPayment.getStatus());
+        verify(mockOrderService, times(1)).updateStatus(sampleOrder.getId(), OrderStatus.FAILED.getValue());
     }
 
     @Test
