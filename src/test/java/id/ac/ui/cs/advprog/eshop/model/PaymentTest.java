@@ -123,4 +123,67 @@ class PaymentTest {
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
 
     }
+
+    @Test
+    void shouldAcceptValidBankTransfer() {
+        Map<String, String> transactionDetails = new HashMap<>();
+        transactionDetails.put("bankName", "Mandiri");
+        transactionDetails.put("referenceCode", "PROMO123");
+
+        Payment transaction = new Payment("a123b456-c789-0123-d456-7890efghijkl",
+                "BANK_TRANSFER", transactionDetails);
+
+        assertEquals(PaymentStatus.SUCCESS.getValue(), transaction.getStatus());
+    }
+
+    @Test
+    void shouldRejectBankTransferWithEmptyFields() {
+        Map<String, String> missingRefCode = new HashMap<>();
+        missingRefCode.put("bankName", "Mandiri");
+        missingRefCode.put("referenceCode", "");
+
+        Payment transactionMissingRef = new Payment("123e4567-e89b-12d3-a456-426614174001",
+                "BANK_TRANSFER", missingRefCode);
+
+        Map<String, String> missingBank = new HashMap<>();
+        missingBank.put("bankName", "");
+        missingBank.put("referenceCode", "PROMO123");
+
+        Payment transactionMissingBank = new Payment("987f6543-d21a-34b5-c678-9abcde123456",
+                "BANK_TRANSFER", missingBank);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), transactionMissingRef.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), transactionMissingBank.getStatus());
+    }
+
+    @Test
+    void shouldRejectBankTransferWithNullValues() {
+        Map<String, String> nullRefCode = new HashMap<>();
+        nullRefCode.put("bankName", "Mandiri");
+        nullRefCode.put("referenceCode", null);
+
+        Payment transactionNullRef = new Payment("9f8e7d6c-5b4a-3210-f987-654321abcdef",
+                "BANK_TRANSFER", nullRefCode);
+
+        Map<String, String> nullBank = new HashMap<>();
+        nullBank.put("bankName", null);
+        nullBank.put("referenceCode", "PROMO123");
+
+        Payment transactionNullBank = new Payment("abcdef12-3456-7890-ghij-klmnopqrstuv",
+                "BANK_TRANSFER", nullBank);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), transactionNullRef.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), transactionNullBank.getStatus());
+    }
+
+    @Test
+    void shouldRejectBankTransferWithInvalidData() {
+        Map<String, String> incorrectDetails = new HashMap<>();
+        incorrectDetails.put("voucherCode", "ESHOP5678XYZ1234");
+
+        Payment invalidTransaction = new Payment("1a2b3c4d-5e6f-7890-ghij-klmnopqrstuv",
+                "BANK_TRANSFER", incorrectDetails);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), invalidTransaction.getStatus());
+    }
 }
