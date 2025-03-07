@@ -16,7 +16,7 @@ class PaymentTest {
     @BeforeEach
     void setUp() {
         testPaymentData = new HashMap<>();
-        testPaymentData.put("voucherCode", "ESHOP5678XYZ1234");
+        testPaymentData.put("voucherCode", "ESHOP1234ABC5678");
     }
 
     @Test
@@ -31,9 +31,10 @@ class PaymentTest {
 
     @Test
     void testCreatePaymentWithInvalidMethod() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Payment("a123b456-c789-0123-d456-ef78901234gh", "INVALID_METHOD", testPaymentData);
-        });
+        Payment payment = new Payment("a123b456-c789-0123-d456-ef78901234gh", "INVALID_METHOD",
+                testPaymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
@@ -62,11 +63,8 @@ class PaymentTest {
 
     @Test
     void testValidPromoCode() {
-        Map<String, String> promoData = new HashMap<>();
-        promoData.put("promoCode", "SHOP5678XYZ1234");
-
         Payment payment = new Payment("a1b2c3d4-e5f6-7890-ghij-klmnopqrstuv",
-                "PROMO", promoData);
+                "VOUCHER", testPaymentData);
 
         assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
     }
@@ -74,10 +72,10 @@ class PaymentTest {
     @Test
     void testInvalidFieldKey() {
         Map<String, String> promoData = new HashMap<>();
-        promoData.put("wrongKey", "SHOP5678XYZ1234");
+        promoData.put("notVoucher", "SHOP5678XYZ1234");
 
         Payment payment = new Payment("a1b2c3d4-e5f6-7890-ghij-klmnopqrstuv",
-                "PROMO", promoData);
+                "VOUCHER", promoData);
 
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
@@ -85,10 +83,10 @@ class PaymentTest {
     @Test
     void testPromoCodeTooShort() {
         Map<String, String> promoData = new HashMap<>();
-        promoData.put("promoCode", "X");
+        promoData.put("voucherCode", "X");
 
         Payment payment = new Payment("a1b2c3d4-e5f6-7890-ghij-klmnopqrstuv",
-                "PROMO", promoData);
+                "VOUCHER", promoData);
 
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
@@ -96,10 +94,10 @@ class PaymentTest {
     @Test
     void testPromoCodeWrongPrefix() {
         Map<String, String> promoData = new HashMap<>();
-        promoData.put("promoCode", "STORE5678XYZ1234");
+        promoData.put("voucherCode", "STORE5678XYZ1234");
 
         Payment payment = new Payment("a1b2c3d4-e5f6-7890-ghij-klmnopqrstuv",
-                "PROMO", promoData);
+                "VOUCHER", promoData);
 
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
@@ -107,10 +105,10 @@ class PaymentTest {
     @Test
     void testPromoCodeMissingDigits() {
         Map<String, String> promoData = new HashMap<>();
-        promoData.put("promoCode", "SHOPABCDEFGHJKLMN");
+        promoData.put("voucherCode", "SHOPABCDEFGHJKLMN");
 
         Payment payment = new Payment("a1b2c3d4-e5f6-7890-ghij-klmnopqrstuv",
-                "PROMO", promoData);
+                "VOUCHER", promoData);
 
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
